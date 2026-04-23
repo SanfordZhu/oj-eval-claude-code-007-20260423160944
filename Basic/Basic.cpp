@@ -79,9 +79,15 @@ void processLine(std::string line, Program &program, EvalState &state) {
             program.addSourceLine(lineNumber, line);
 
             // Parse the statement part
-            Statement* stmt = parseStatement(scanner);
-            if (stmt != nullptr) {
-                program.setParsedStatement(lineNumber, stmt);
+            try {
+                Statement* stmt = parseStatement(scanner);
+                if (stmt != nullptr) {
+                    program.setParsedStatement(lineNumber, stmt);
+                }
+            } catch (ErrorException &ex) {
+                // If parsing fails, remove the line we just added
+                program.removeSourceLine(lineNumber);
+                throw;
             }
         } else {
             // Empty line number - remove the line

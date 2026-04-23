@@ -64,7 +64,8 @@ void InputStatement::execute(EvalState &state, Program &program) {
 EndStatement::EndStatement() {}
 
 void EndStatement::execute(EvalState &state, Program &program) {
-    exit(0);
+    // Set current line to -2 to indicate END statement was executed
+    state.setCurrentLine(-2);
 }
 
 // GotoStatement implementation
@@ -128,7 +129,10 @@ void RunStatement::execute(EvalState &state, Program &program) {
         stmt->execute(state, program);
 
         int nextLine = state.getCurrentLine();
-        if (nextLine != -1) {
+        if (nextLine == -2) {
+            // END statement was executed
+            return;
+        } else if (nextLine != -1) {
             // GOTO or IF-THEN was executed
             currentLine = nextLine;
         } else {
@@ -161,8 +165,6 @@ void ClearStatement::execute(EvalState &state, Program &program) {
 QuitStatement::QuitStatement() {}
 
 void QuitStatement::execute(EvalState &state, Program &program) {
-    // Clean up before exit
-    program.clear();
-    state.clear();
+    // QUIT always exits the interpreter immediately
     std::exit(0);
 }
