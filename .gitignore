@@ -1,0 +1,16 @@
+CMakeFiles/
+CMakeCache.txt
+code
+testcode
+score
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+Test/
+test_ans
+test_out
+ref_out
+my_out
